@@ -53,7 +53,7 @@ func main() {
 		fmt.Println("tail: ", tail)
 	}
 
-	ip_addrs, err := net.LookupHost(hostname)
+	ipAddrs, err := net.LookupHost(hostname)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func main() {
 	exitCode := 0
 	total := 0
 	exitCodes := []int{}
-	for _, ip := range ip_addrs {
+	for _, ip := range ipAddrs {
 		exitCode = run(ip, tail)
 		exitCodes = append(exitCodes, exitCode)
 		total += exitCode
@@ -122,10 +122,9 @@ func run(ip string, tail []string) int {
 			exitCode2 = 2
 		}
 		return exitCode2
-	} else {
-		// exit code was 0
-		return 0
 	}
+	// exit code was 0
+	return 0
 }
 
 func exitWithProperCode(total int, exitCodes []int) {
