@@ -1,6 +1,8 @@
 # ip_wrapper - Execute a sensu check for all IPs from hostname lookup
 [![GitHub version](https://badge.fury.io/gh/wywygmbh%2Fip_wrapper.svg)](https://badge.fury.io/gh/wywygmbh%2Fip_wrapper)
 [![Build Status](https://travis-ci.org/wywygmbh/ip_wrapper.svg?branch=master)](https://travis-ci.org/wywygmbh/ip_wrapper)
+[![Go Report](https://goreportcard.com/badge/github.com/wywygmbh/ip_wrapper)](https://goreportcard.com/report/github.com/wywygmbh/ip_wrapper)
+
 ### Motivation
 
 If a service has multiple IPs (e.g. behind a load balancer) and you want to run a sensu
