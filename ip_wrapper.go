@@ -75,10 +75,15 @@ func run(ip string, tail []string) int {
 		fmt.Printf("Checking IP: %s\n", ip)
 	}
 	binary, lookErr := exec.LookPath(tail[0])
+	tail = tail[1:]
 	if lookErr != nil {
 		fmt.Println(lookErr)
 		// check not found
 		return 3
+	} else {
+		if verbose {
+			fmt.Printf("Found binary: %s\n", binary)
+		}
 	}
 
 	// replace '%%IP%%' placeholder in the command to be executed
