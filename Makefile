@@ -4,8 +4,11 @@ PACKAGES := $(shell GOPATH=$(GOPATH) go list ./... | grep -v /vendor/)
 
 all: build
 
-build:
+build: clean
 	GOPATH=$(GOPATH) $(GO) build -ldflags "-X main.version=`cat VERSION`"
+
+clean:
+	-rm ip_wrapper
 
 fmt:
 	GOPATH=$(GOPATH) find . -name "*.go" | xargs gofmt -w -s

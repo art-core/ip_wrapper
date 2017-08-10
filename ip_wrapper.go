@@ -37,8 +37,7 @@ func initArgs() {
 		os.Exit(0)
 	}
 
-
-	// this is the binary to run, if the time's right
+	// this is the command to run
 	tail = flag.Args()
 	if len(tail) < 1 {
 		os.Exit(3)
@@ -49,41 +48,42 @@ func main() {
 	initArgs()
 
 	if verbose {
-		fmt.Println("host: ", hostname)
-		fmt.Println("tail: ", tail)
+		fmt.Println("host   : ", hostname)
+		fmt.Println("command: ", tail)
+	}
+	// get the real path of the executable
+	// exec.Command() would do LookPath, but this is for error handling
+	binary, lookErr := exec.LookPath(tail[0])
+	// this is not syscall.Exec(), so we need to shift the first element off
+	tail = tail[1:]
+	if lookErr != nil {
+		fmt.Println(lookErr)
+		// executable check command not found
+		exitWithProperCode(3, []int{3})
+	} else if verbose {
+		fmt.Printf("Found binary: %s\n", binary)
 	}
 
 	ipAddrs, err := net.LookupHost(hostname)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		exitWithProperCode(1, []int{1})
 	}
 
 	exitCode := 0
 	total := 0
 	exitCodes := []int{}
 	for _, ip := range ipAddrs {
-		exitCode = run(ip, tail)
+		exitCode = run(ip, binary, tail)
 		exitCodes = append(exitCodes, exitCode)
 		total += exitCode
 	}
 	exitWithProperCode(total, exitCodes)
 }
 
-func run(ip string, tail []string) int {
-	// get the real path of the executable
+func run(ip string, binary string, tail []string) int {
 	if verbose {
 		fmt.Printf("Checking IP: %s\n", ip)
-	}
-	binary, lookErr := exec.LookPath(tail[0])
-	tail = tail[1:]
-	if lookErr != nil {
-		fmt.Println(lookErr)
-		// check not found
-		return 3
-	} else {
-		if verbose {
-			fmt.Printf("Found binary: %s\n", binary)
-		}
 	}
 
 	// replace '%%IP%%' placeholder in the command to be executed
